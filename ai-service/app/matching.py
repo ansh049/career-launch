@@ -1,9 +1,6 @@
 from functools import lru_cache
 import re
 
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-
 from app.skills import extract_skills
 
 SCORING_VERSION = "v2.0"
@@ -15,6 +12,7 @@ SCORING_WEIGHTS = {
 
 @lru_cache(maxsize=1)
 def get_model():
+    from sentence_transformers import SentenceTransformer
     return SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
 
@@ -54,6 +52,7 @@ def match_jobs(
     if not jobs:
         return []
 
+    from sklearn.metrics.pairwise import cosine_similarity
     model = get_model()
 
     resume_vector = model.encode([resume_text])

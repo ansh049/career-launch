@@ -415,4 +415,11 @@ def internal_market_aggregate(
     require_internal_token(x_internal_token)
     result = aggregate_market_skills(request)
     return {"success": True, "market": result.model_dump()}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port)
+
 

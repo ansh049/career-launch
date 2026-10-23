@@ -1,5 +1,7 @@
 # CareerLaunch: AI-Powered Career & Recruitment Ecosystem
 
+🌐 **Live Application:** [CareerLaunch — Next-Gen Job & Internship Portal](https://career-client-vqpy.onrender.com/)
+
 An enterprise-grade, full-stack recruitment platform powered by **Node.js (Express 5)**, **FastAPI**, **Sentence Transformers**, **Groq LLM orchestration**, and **React 19 (Vite + Tailwind CSS)**. CareerLaunch transforms conventional job boards into an intelligent ecosystem featuring semantic candidate-job matching, automated resume parsing, AI mock interviews, recruiter anti-fraud risk scoring, and interactive career knowledge graphs.
 
 ---

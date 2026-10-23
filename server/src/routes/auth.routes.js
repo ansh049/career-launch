@@ -34,10 +34,11 @@ function publicUser(user) {
 }
 router.get("/csrf", (req, res) => {
   const csrfToken = createCsrfToken();
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie("csrfToken", csrfToken, {
     httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     path: "/",
   });
   res.json({ success: true, csrfToken });

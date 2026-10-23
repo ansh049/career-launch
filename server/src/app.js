@@ -42,7 +42,15 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'", "http://localhost:*", "http://127.0.0.1:*"],
+        connectSrc: [
+          "'self'",
+          "http://localhost:*",
+          "http://127.0.0.1:*",
+          "https://*.onrender.com",
+          ...(process.env.CLIENT_URL
+            ? process.env.CLIENT_URL.split(",").map((u) => u.trim())
+            : []),
+        ],
       },
     },
     crossOriginResourcePolicy: { policy: "cross-origin" },

@@ -3,7 +3,10 @@ const isProduction = process.env.NODE_ENV === "production";
 const baseCookieOptions = {
   httpOnly: true,
   secure: isProduction,
-  sameSite: "lax",
+  // SameSite=None is required for cross-origin cookies (e.g. client & server
+  // on separate *.onrender.com subdomains). SameSite=None must be paired with
+  // Secure=true, which is enforced above in production.
+  sameSite: isProduction ? "none" : "lax",
 };
 
 export const ACCESS_COOKIE = "cl_access";

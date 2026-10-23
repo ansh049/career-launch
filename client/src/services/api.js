@@ -50,6 +50,14 @@ api.interceptors.request.use(async (config) => {
     config.headers.setContentType(false);
   }
 
+  const token =
+    typeof localStorage !== "undefined"
+      ? localStorage.getItem("cl_token")
+      : null;
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const method = (config.method || "get").toUpperCase();
   if (["GET", "HEAD", "OPTIONS"].includes(method)) return config;
 
@@ -82,7 +90,8 @@ api.interceptors.response.use(
       originalRequest._csrfRetry = true;
 
       try {
-        await requestCsrfToken(true);
+        const freshToken = await requestCsrfToken(true);
+        originalRequest.headers["X-CSRF-Token"] = freshToken;
         return api(originalRequest);
       } catch (csrfError) {
         return Promise.reject(csrfError);

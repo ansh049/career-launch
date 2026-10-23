@@ -1,4 +1,5 @@
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction =
+  process.env.NODE_ENV === "production" || process.env.RENDER === "true";
 
 const baseCookieOptions = {
   httpOnly: true,
@@ -7,6 +8,7 @@ const baseCookieOptions = {
   // on separate *.onrender.com subdomains). SameSite=None must be paired with
   // Secure=true, which is enforced above in production.
   sameSite: isProduction ? "none" : "lax",
+  ...(isProduction ? { partitioned: true } : {}),
 };
 
 export const ACCESS_COOKIE = "cl_access";
@@ -21,7 +23,7 @@ export function setAuthCookies(res, accessToken, refreshToken) {
 
   res.cookie(REFRESH_COOKIE, refreshToken, {
     ...baseCookieOptions,
-    path: "/api/auth",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }
@@ -34,6 +36,6 @@ export function clearAuthCookies(res) {
 
   res.clearCookie(REFRESH_COOKIE, {
     ...baseCookieOptions,
-    path: "/api/auth",
+    path: "/",
   });
 }

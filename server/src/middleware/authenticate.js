@@ -4,7 +4,11 @@ import { verifyAccessToken } from "../utils/token.js";
 
 export async function authenticate(req, res, next) {
   try {
-    const token = req.cookies?.[ACCESS_COOKIE];
+    const authHeader = req.get("authorization");
+    const bearerToken = authHeader?.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : null;
+    const token = bearerToken || req.cookies?.[ACCESS_COOKIE];
 
     if (!token) {
       return res.status(401).json({

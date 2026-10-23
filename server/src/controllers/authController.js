@@ -82,12 +82,14 @@ export async function register(req, res, next) {
     const refreshToken = createRefreshToken(user);
     user.refreshTokenHash = hashToken(refreshToken);
     await user.save();
-    setAuthCookies(res, createAccessToken(user), refreshToken);
+    const accessToken = createAccessToken(user);
+    setAuthCookies(res, accessToken, refreshToken);
 
     return res.status(201).json({
       success: true,
       message: "Account created successfully",
       user: publicUser(user),
+      token: accessToken,
       authenticated: true,
     });
   } catch (error) {
@@ -141,12 +143,14 @@ export async function login(req, res, next) {
     user.refreshTokenHash = hashToken(refreshToken);
     await user.save();
 
-    setAuthCookies(res, createAccessToken(user), refreshToken);
+    const accessToken = createAccessToken(user);
+    setAuthCookies(res, accessToken, refreshToken);
 
     return res.status(200).json({
       success: true,
       message: "Login successful",
       user: publicUser(user),
+      token: accessToken,
     });
   } catch (error) {
     next(error);
@@ -214,11 +218,13 @@ export async function refresh(req, res, next) {
     user.refreshTokenHash = hashToken(newRefreshToken);
     await user.save();
 
-    setAuthCookies(res, createAccessToken(user), newRefreshToken);
+    const newAccessToken = createAccessToken(user);
+    setAuthCookies(res, newAccessToken, newRefreshToken);
 
     return res.status(200).json({
       success: true,
       user: publicUser(user),
+      token: newAccessToken,
     });
   } catch (error) {
     next(error);

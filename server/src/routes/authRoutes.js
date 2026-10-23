@@ -16,12 +16,14 @@ const router = Router();
 
 router.get("/csrf", (req, res) => {
   const csrfToken = createCsrfToken();
-  const isProduction = process.env.NODE_ENV === "production";
+  const isProduction =
+    process.env.NODE_ENV === "production" || process.env.RENDER === "true";
   res.cookie("csrfToken", csrfToken, {
     httpOnly: false,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
     path: "/",
+    ...(isProduction ? { partitioned: true } : {}),
   });
   res.json({ success: true, csrfToken });
 });

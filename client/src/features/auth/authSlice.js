@@ -20,6 +20,9 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const { data } = await api.post("/api/auth/login", credentials);
+      if (data.token && typeof localStorage !== "undefined") {
+        localStorage.setItem("cl_token", data.token);
+      }
       return data.user;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Login failed");
@@ -32,6 +35,9 @@ export const registerUser = createAsyncThunk(
   async (details, { rejectWithValue }) => {
     try {
       const { data } = await api.post("/api/auth/register", details);
+      if (data.token && typeof localStorage !== "undefined") {
+        localStorage.setItem("cl_token", data.token);
+      }
       return data.user;
     } catch (error) {
       return rejectWithValue(
@@ -46,9 +52,15 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await api.post("/api/auth/logout");
+      if (typeof localStorage !== "undefined") {
+        localStorage.removeItem("cl_token");
+      }
       resetCsrfToken();
       return null;
     } catch (error) {
+      if (typeof localStorage !== "undefined") {
+        localStorage.removeItem("cl_token");
+      }
       return rejectWithValue(error.response?.data?.message || "Logout failed");
     }
   },

@@ -41,12 +41,18 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     const { data } = await api.post("/api/auth/login", credentials);
+    if (data.token && typeof localStorage !== "undefined") {
+      localStorage.setItem("cl_token", data.token);
+    }
     setUser(data.user);
     return data.user;
   };
 
   const register = async (details) => {
     const { data } = await api.post("/api/auth/register", details);
+    if (data.token && typeof localStorage !== "undefined") {
+      localStorage.setItem("cl_token", data.token);
+    }
     setUser(data.user);
     return data.user;
   };
@@ -55,6 +61,9 @@ export function AuthProvider({ children }) {
     try {
       await api.post("/api/auth/logout");
     } finally {
+      if (typeof localStorage !== "undefined") {
+        localStorage.removeItem("cl_token");
+      }
       setUser(null);
     }
   };

@@ -35,15 +35,15 @@ export function csrfProtection(req, res, next) {
     return next();
   }
 
-  const cookieToken = req.cookies?.csrfToken;
+  // In cross-origin deployments (e.g. client & server on separate
+  // *.onrender.com subdomains), JavaScript on the client domain CANNOT read
+  // cookies set on the server domain. We therefore validate only the
+  // X-CSRF-Token header whose value comes from the CSRF endpoint JSON body.
+  // An attacker on a third-party site cannot read that JSON response because
+  // CORS blocks cross-origin reads, so the token remains unguessable.
   const headerToken = req.get("X-CSRF-Token");
 
-  if (
-    !cookieToken ||
-    !headerToken ||
-    cookieToken !== headerToken ||
-    !isValidToken(headerToken)
-  ) {
+  if (!headerToken || !isValidToken(headerToken)) {
     return res.status(403).json({
       success: false,
       message: "Invalid or missing CSRF token",

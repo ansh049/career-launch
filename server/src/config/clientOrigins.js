@@ -21,5 +21,19 @@ export function getAllowedClientOrigins() {
 export function isAllowedClientOrigin(origin) {
   if (!origin) return false;
   const normalized = normalizeOrigin(origin);
-  return getAllowedClientOrigins().has(normalized);
+  if (getAllowedClientOrigins().has(normalized)) {
+    return true;
+  }
+
+  // Automatically allow any onrender.com subdomains for Render deployments
+  try {
+    const url = new URL(normalized);
+    if (url.protocol === "https:" && url.hostname.endsWith(".onrender.com")) {
+      return true;
+    }
+  } catch {
+    // ignore parse error
+  }
+
+  return false;
 }

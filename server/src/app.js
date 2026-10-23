@@ -29,6 +29,9 @@ import marketRoutes from "./routes/market.routes.js";
 
 const app = express();
 
+// Trust Render's reverse proxy for correct protocol, client IP, and secure cookies
+app.set("trust proxy", 1);
+
 // 1. Request ID tracing middleware (first in pipeline)
 app.use(requestId);
 
@@ -70,7 +73,12 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "X-CSRF-Token", "X-Request-Id"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-CSRF-Token",
+      "X-Request-Id",
+    ],
     exposedHeaders: ["X-Request-Id"],
   })
 );

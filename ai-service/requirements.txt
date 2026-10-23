@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+pypdf
+pymupdf
+sentence-transformers
+scikit-learn
+httpx
+pytest
+groq
+python-dotenv

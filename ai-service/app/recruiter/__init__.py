@@ -1,0 +1,1 @@
+# Recruiter Intelligence AI package
